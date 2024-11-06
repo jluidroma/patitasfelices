@@ -1,0 +1,6 @@
+# Ignorar el archivo de entorno .env
+.env
+
+# Ignorar carpetas de entorno virtual
+venv/
+env/

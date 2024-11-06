@@ -1,0 +1,23 @@
+{% extends 'adminlte/base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="card shadow-lg border-danger">
+        <div class="card-header bg-danger text-white text-center">
+            <h3 class="mb-0">Eliminar Solicitud de Adopción</h3>
+            <p class="mb-0">¿Estás seguro de que deseas eliminar esta solicitud?</p>
+        </div>
+
+        <div class="card-body">
+            <p><strong>Solicitante:</strong> {{ object.nombre_solicitante }}</p>
+            <p><strong>Correo:</strong> {{ object.email_solicitante }}</p>
+            <p><strong>Teléfono:</strong> {{ object.telefono_solicitante }}</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-lg">Eliminar Solicitud</button>
+                <a href="{% url 'solicitudadopcion-list' %}" class="btn btn-outline-primary btn-lg">Cancelar</a>
+            </form>
+        </div>
+    </div>
+  </div>
+{% endblock %}

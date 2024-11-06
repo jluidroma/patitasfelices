@@ -1,0 +1,181 @@
+{% load adminlte_helpers i18n %}
+{% load static %}
+<nav class="main-header navbar navbar-expand navbar-white navbar-light" style="height: 130px;">
+
+    <!-- Header Navbar: style can be found in header.less -->
+    {% block nav_bar %}
+    <!-- Left navbar links -->
+    <ul class="navbar-nav d-flex align-items-center w-100">
+        <li class="nav-item">
+            <!-- Logo alineado a la izquierda -->
+            <a class="nav-link" href="/" style="display: flex; align-items: center;">
+                <img src="{% static 'images/logo.jpeg' %}" alt="Logo" style="height: 100px; margin-right: 10px;">
+            </a>
+        </li>
+
+        <!-- Centrando los links de navegación -->
+        <div class="mx-auto d-flex">
+            <li class="nav-item">
+                <a href="/home" class="nav-link text-center hover-effect" style="
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 1.3rem;
+                    font-weight: bold;
+                    color: #0056b3;
+                    background-color: #f0f8ff;
+                    border-radius: 15px;
+                    padding: 10px 20px;
+                    margin-right: 10px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    display: flex;
+                    align-items: center;
+                    transition: all 0.3s ease;">
+                    <i class="fas fa-home icon-animated" style="margin-right: 8px;"></i> Home
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/mascotas" class="nav-link text-center hover-effect" style="
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 1.3rem;
+                    font-weight: bold;
+                    color: #0056b3;
+                    background-color: #f0f8ff;
+                    border-radius: 15px;
+                    padding: 10px 20px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    display: flex;
+                    align-items: center;
+                    transition: all 0.3s ease;">
+                    <i class="fas fa-paw icon-animated" style="margin-right: 8px;"></i> Mascotas
+                </a>
+            </li>
+        </div>
+    </ul>
+
+    {% block nav_custom_menu %}
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto d-flex align-items-center">
+        <!-- Logos de redes sociales -->
+        <li class="nav-item">
+            <a href="https://facebook.com" class="nav-link hover-effect" target="_blank" style="color: #4267B2;">
+                <i class="fab fa-facebook fa-2x icon-animated"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://twitter.com" class="nav-link hover-effect" target="_blank" style="color: #1DA1F2;">
+                <i class="fab fa-twitter fa-2x icon-animated"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://instagram.com" class="nav-link hover-effect" target="_blank" style="color: #C13584;">
+                <i class="fab fa-instagram fa-2x icon-animated"></i>
+            </a>
+        </li>
+
+        {% block user_info %}
+        <li class="nav-item">
+            {% if request.user.is_authenticated %}
+                <!-- Si el usuario está autenticado, mostrar su nombre y correo electrónico -->
+                <a class="nav-link" href="#" data-toggle="dropdown">
+                    <i class="far fa-user fa-2x icon-animated"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right custom-login-box">
+                    <div class="media-body p-3">
+                        <h3 class="dropdown-item-title mb-3">Bienvenido</h3>
+                        <p><strong>Nombre:</strong> {{ request.user.username }}</p>  <!-- Nombre de usuario -->
+                        <p><strong>Correo:</strong> {{ request.user.email }}</p>      <!-- Correo electrónico -->
+                        <!-- Botón de Cerrar sesión estilizado como botón rojo -->
+                        <a class="dropdown-item btn btn-sm btn-block custom-btn">
+                            Cerrar sesión
+                        </a>  
+                    </div>
+                </div>
+            {% else %}
+                <!-- Si el usuario no está autenticado, mostrar el formulario de login -->
+                <a class="nav-link" href="#" data-toggle="dropdown">
+                    <i class="far fa-user fa-2x icon-animated"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right custom-login-box">
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <div class="media-body p-3">
+                            <h3 class="dropdown-item-title mb-3">Iniciar sesión</h3>
+        
+                            {% if messages %}
+                                <div class="alert alert-danger">
+                                    {% for message in messages %}
+                                        <p>{{ message }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+        
+                            <div class="form-group">
+                                <label for="nombre">Usuario</label>
+                                <input type="text" name="nombre" id="nombre" class="form-control" placeholder="nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Contraseña</label>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm btn-block">Iniciar sesión</button>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+        </li>
+        {% endblock %}
+        
+        
+        
+        
+    </ul>
+    {% endblock nav_custom_menu %}
+
+    {% endblock %}
+</nav>
+
+<!-- CSS personalizado para hover y animaciones -->
+<style>
+    /* Estilo para el cuadro de login */
+    .custom-login-box {
+        border: 2px solid #007bff; /* Borde azul */
+        border-radius: 10px; /* Bordes redondeados */
+        background-color: #ffffff; /* Fondo blanco */
+        box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Sombra para darle profundidad */
+        margin-top: -20px; /* Reduje aún más el margen superior para subir el cuadro */
+        transform: translateY(0px); /* El cuadro se mantiene en su posición original */
+        margin-left: -5px; /* Ajusta el cuadro hacia la izquierda para que se acerque más al icono */
+    }
+    
+    /* Efecto de transición cuando el cuadro aparece */
+    .custom-login-box {
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    /* Estilo cuando se activa el menú de despliegue */
+    .nav-link:hover + .dropdown-menu.custom-login-box {
+        transform: translateY(0px); /* No hay desplazamiento hacia abajo */
+    }
+    .hover-effect:hover {
+        background-color: #e0f7fa;
+        color: #00796b;
+        transform: scale(1.05);
+        transition: all 0.3s ease;
+    }
+
+    .icon-animated:hover {
+        transform: rotate(15deg);
+        transition: transform 0.3s ease;
+    }
+    .custom-btn {
+        background-color: red;  /* Fondo rojo */
+        color: white;           /* Texto blanco */
+        border-radius: 5px;     /* Bordes redondeados */
+    }
+
+    .custom-btn:hover {
+        background-color: darkred;  /* Cambio de color al pasar el mouse */
+    }
+
+</style>
+<!-- Enlace a la hoja de estilos de Bootstrap -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">

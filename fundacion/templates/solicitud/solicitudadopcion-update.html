@@ -1,0 +1,28 @@
+{% extends 'adminlte/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg border-primary">
+        <div class="card-header bg-primary text-white text-center">
+            <h3 class="mb-0">Actualizar Solicitud de Adopción</h3>
+            <p class="mb-0">Modifica el estado de la solicitud de adopción.</p>
+        </div>
+
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <!-- Botones para aceptar o rechazar la solicitud -->
+                <button type="submit" name="aceptar" class="btn btn-success btn-lg">
+                    <i class="fas fa-check-circle"></i> Aceptar Solicitud
+                </button>
+
+                <button type="submit" name="rechazar" class="btn btn-warning btn-lg">
+                    <i class="fas fa-times-circle"></i> Rechazar Solicitud
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

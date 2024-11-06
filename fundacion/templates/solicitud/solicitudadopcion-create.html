@@ -1,0 +1,204 @@
+{% extends "adminlte/base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Carrusel de imágenes de ancho completo -->
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000" style="margin-top: -50px;"> <!-- Ajuste aquí -->
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="{% static 'images/c1.avif' %}" class="d-block w-100" alt="Imagen 1">
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'images/c2.avif' %}" class="d-block w-100" alt="Imagen 2">
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'images/c3.webp' %}" class="d-block w-100" alt="Imagen 3">
+        </div>
+    </div>
+</div>
+
+<!-- Título sobrepuesto en el carrusel -->
+<div class="carousel-title-container">
+    <h1 class="carousel-title">Mascotas disponibles para adoptar</h1>
+</div>
+<div class="container mt-5">
+    <div class="card shadow-lg border-primary">
+        <div class="card-header bg-primary text-white text-center">
+            <h3 class="mb-0">Solicitud de Adopción</h3>
+            <p class="mb-0">¡Haz la diferencia en la vida de una mascota!</p>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <!-- Columna de la Mascota (izquierda) -->
+                <div class="col-md-5">
+                    <div class="card shadow-sm border-primary mb-4">
+                        <!-- Imagen responsiva que se ajusta automáticamente sin corte -->
+                        <img src="{% static mascota.imagen.url %}" class="card-img-top img-fluid" alt="{{ mascota.nombre }}" style="object-fit: cover; height: 300px; width: 100%;" />
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ mascota.nombre }}</h5>
+                        <p class="card-text"><strong>Raza:</strong> {{ mascota.raza }}</p>
+                        <p class="card-text"><strong>Edad:</strong> {{ mascota.edad }} años</p>
+                        <p class="card-text"><strong>Descripción:</strong> {{ mascota.descripcion }}</p>
+                    </div>
+                </div>
+
+                <!-- Columna del Formulario (derecha) -->
+                <div class="col-md-7">
+                    <form method="post" enctype="multipart/form-data" class="form-horizontal">
+                        {% csrf_token %}
+                        
+                        <!-- Campo oculto para la mascota -->
+                        <input type="hidden" name="mascota" value="{{ mascota.id }}" />
+
+                        <div class="row">
+                            <!-- Nombre del solicitante -->
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    <label for="{{ form.nombre_solicitante.id_for_label }}" class="form-label">
+                                        <i class="fas fa-user"></i> Nombre del Solicitante
+                                    </label>
+                                    {{ form.nombre_solicitante.errors }}
+                                    {{ form.nombre_solicitante }}
+                                </div>
+                            </div>
+
+                            <!-- Correo electrónico -->
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    <label for="{{ form.email_solicitante.id_for_label }}" class="form-label">
+                                        <i class="fas fa-envelope"></i> Correo Electrónico
+                                    </label>
+                                    {{ form.email_solicitante.errors }}
+                                    {{ form.email_solicitante }}
+                                </div>
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    <label for="{{ form.telefono_solicitante.id_for_label }}" class="form-label">
+                                        <i class="fas fa-phone-alt"></i> Teléfono
+                                    </label>
+                                    {{ form.telefono_solicitante.errors }}
+                                    {{ form.telefono_solicitante }}
+                                </div>
+                            </div>
+
+                            <!-- Dirección -->
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    <label for="{{ form.direccion_solicitante.id_for_label }}" class="form-label">
+                                        <i class="fas fa-map-marker-alt"></i> Dirección
+                                    </label>
+                                    {{ form.direccion_solicitante.errors }}
+                                    {{ form.direccion_solicitante }}
+                                </div>
+                            </div>
+
+                            <!-- Observaciones -->
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    <label for="{{ form.observaciones.id_for_label }}" class="form-label">
+                                        <i class="fas fa-comment-dots"></i> Observaciones
+                                    </label>
+                                    {{ form.observaciones.errors }}
+                                    {{ form.observaciones }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="mt-4 text-center">
+                            <button type="submit" class="btn btn-success btn-lg px-4 py-3">
+                                <i class="fas fa-save"></i> Enviar Solicitud
+                            </button>
+                            <a href="{% url 'home' %}" class="btn btn-danger btn-lg px-4 py-3">
+                                <i class="fas fa-times-circle"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Ajustes de estilo para el carrusel */
+    .carousel-item img {
+        height: 60vh; /* Aumento la altura del carrusel */
+        object-fit: cover;
+        transition: transform 0.9s ease-in-out; /* Transición suave entre las imágenes */
+    }
+    
+    /* Paleta de colores suaves y amigables */
+    body {
+        background-color: #f7fafc;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Contenedor que asegura que el título esté sobre el carrusel */
+    .carousel-title-container {
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        z-index: 10;
+        text-align: center;
+    }
+
+    /* Estilo para el título sobrepuesto en el carrusel */
+    .carousel-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2.5rem;
+        color: #ffffff;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* Sombra del texto */
+        font-weight: bold;
+    }
+    /* Estilos para mejorar la presentación */
+    .card {
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    /* Espaciado entre los campos del formulario */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Mejorar la alineación y márgenes en los botones */
+    .btn {
+        margin-top: 20px;
+    }
+
+    .col-md-12 {
+        margin-bottom: 1rem;
+    }
+
+    .card-body p {
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+    }
+</style>
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Lora:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+{% endblock %}

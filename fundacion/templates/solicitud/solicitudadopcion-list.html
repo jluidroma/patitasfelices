@@ -1,0 +1,67 @@
+{% extends 'adminlte/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg border-primary">
+        <div class="card-header bg-primary text-white text-center">
+            <h3 class="mb-0">Solicitudes de Adopción</h3>
+            <p class="mb-0">Gestiona las solicitudes de adopción de las mascotas</p>
+        </div>
+
+        <div class="card-body">
+            <!-- Tabla de Solicitudes -->
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Nombre Solicitante</th>
+                        <th scope="col">Correo</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Dirección</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for solicitud in object_list %}
+                    <tr>
+                        <td>{{ solicitud.nombre_solicitante }}</td>
+                        <td>{{ solicitud.email_solicitante }}</td>
+                        <td>{{ solicitud.telefono_solicitante }}</td>
+                        <td>{{ solicitud.direccion_solicitante }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if solicitud.estado_solicitud == 'Pendiente' %}
+                                    badge-warning
+                                {% elif solicitud.estado_solicitud == 'Aprobada' %}
+                                    badge-success
+                                {% else %}
+                                    badge-danger
+                                {% endif %}
+                            ">
+                                {{ solicitud.estado_solicitud }}
+                            </span>
+                        </td>
+                        <td>
+                            <!-- Botones de acción -->
+                            {% if solicitud.estado_solicitud == 'Pendiente' %}
+                            <a href="{% url 'solicitudadopcion-update' solicitud.pk %}" class="btn btn-success btn-sm">
+                                <i class="fas fa-check-circle"></i> Aceptar
+                            </a>
+                            <a href="{% url 'solicitudadopcion-update' solicitud.pk %}" class="btn btn-danger btn-sm">
+                                <i class="fas fa-times-circle"></i> Rechazar
+                            </a>                            
+                            {% endif %}
+                            <a href="{% url 'solicitudadopcion-delete' solicitud.pk %}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar esta solicitud?')">
+                                <i class="fas fa-trash-alt"></i> Eliminar
+                            </a>
+                            
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,166 @@
+{% extends "adminlte/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">Nueva Mascota</h3>
+    </div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data" class="form-horizontal">
+        {% csrf_token %}
+        <div class="row">
+          <!-- Nombre -->
+          <div class="col-md-6 mb-3">
+            <div class="form-group">
+              <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre</label>
+              {{ form.nombre.errors }}
+              <input
+                type="text"
+                name="nombre"
+                class="form-control"
+                id="{{ form.nombre.id_for_label }}"
+                required
+                value="{{ form.nombre.value|default:'' }}"
+              />
+            </div>
+          </div>
+
+          <!-- Especie -->
+          <div class="col-md-6 mb-3">
+            <div class="form-group">
+              <label for="{{ form.especie.id_for_label }}" class="form-label">Especie</label>
+              {{ form.especie.errors }}
+              <input
+                type="text"
+                name="especie"
+                class="form-control"
+                id="{{ form.especie.id_for_label }}"
+                required
+                value="{{ form.especie.value|default:'' }}"
+              />
+            </div>
+          </div>
+
+          <!-- Raza -->
+          <div class="col-md-6 mb-3">
+            <div class="form-group">
+              <label for="{{ form.raza.id_for_label }}" class="form-label">Raza</label>
+              {{ form.raza.errors }}
+              <input
+                type="text"
+                name="raza"
+                class="form-control"
+                id="{{ form.raza.id_for_label }}"
+                value="{{ form.raza.value|default:'' }}"
+              />
+            </div>
+          </div>
+
+          <!-- Edad -->
+          <div class="col-md-6 mb-3">
+            <div class="form-group">
+              <label for="{{ form.edad.id_for_label }}" class="form-label">Edad (años)</label>
+              {{ form.edad.errors }}
+              <input
+                type="number"
+                name="edad"
+                class="form-control"
+                id="{{ form.edad.id_for_label }}"
+                required
+                value="{{ form.edad.value|default:'' }}"
+              />
+            </div>
+          </div>
+
+          <!-- Sexo -->
+          <div class="col-md-6 mb-3">
+            <div class="form-group">
+              <label for="{{ form.sexo.id_for_label }}" class="form-label">Sexo</label>
+              {{ form.sexo.errors }}
+              <select
+                name="sexo"
+                class="form-control"
+                id="{{ form.sexo.id_for_label }}"
+                required
+              >
+                <option value="M" {% if form.sexo.value == 'M' %}selected{% endif %}>Macho</option>
+                <option value="H" {% if form.sexo.value == 'H' %}selected{% endif %}>Hembra</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Descripción -->
+          <div class="col-md-12 mb-3">
+            <div class="form-group">
+              <label for="{{ form.descripcion.id_for_label }}" class="form-label">Descripción</label>
+              {{ form.descripcion.errors }}
+              <textarea
+                name="descripcion"
+                class="form-control"
+                id="{{ form.descripcion.id_for_label }}"
+                rows="3"
+              >{{ form.descripcion.value }}</textarea>
+            </div>
+          </div>
+
+          <!-- Imagen -->
+          <div class="col-md-6 mb-3">
+            <div class="form-group">
+              <label for="{{ form.imagen.id_for_label }}" class="form-label">Imagen</label>
+              {{ form.imagen.errors }}
+              <div class="input-group">
+                <input
+                  type="file"
+                  class="form-control form-control-file d-none"
+                  name="imagen"
+                  id="{{ form.imagen.id_for_label }}"
+                  required
+                  accept="image/*"
+                />
+                <label class="form-control text-truncate" for="{{ form.imagen.id_for_label }}">
+                  {% if form.imagen %}
+                    Imagen seleccionada: {{ form.imagen.name|slice:"8:" }}
+                  {% else %}
+                    Seleccionar imagen...
+                  {% endif %}
+                </label>
+                <label class="input-group-text" for="{{ form.imagen.id_for_label }}">
+                  <i class="fas fa-upload"></i>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Estado de adopción -->
+          <div class="col-md-6 mb-3">
+            <div class="form-group">
+              <label for="{{ form.estado_adopcion.id_for_label }}" class="form-label">Estado de adopción</label>
+              {{ form.estado_adopcion.errors }}
+              <select
+                name="estado_adopcion"
+                class="form-control"
+                id="{{ form.estado_adopcion.id_for_label }}"
+                required
+              >
+                <option value="Disponible" {% if form.estado_adopcion.value == 'Disponible' %}selected{% endif %}>Disponible</option>
+                <option value="Adoptada" {% if form.estado_adopcion.value == 'Adoptada' %}selected{% endif %}>Adoptada</option>
+                <option value="Rechazada" {% if form.estado_adopcion.value == 'Rechazada' %}selected{% endif %}>Rechazada</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+        <div class="mt-4 text-center">
+          <button type="submit" class="btn btn-primary btn-lg">
+            <i class="fas fa-save"></i> Guardar
+          </button>
+          <a href="{% url 'administrador-list' %}" class="btn btn-secondary btn-lg">
+            <i class="fas fa-times"></i> Cancelar
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock  %}
