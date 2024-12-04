@@ -1,15 +1,18 @@
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
+from django.conf import settings
 from django.views.generic import CreateView
 from .models import SolicitudAdopcion, Mascota
 from .forms import SolicitudAdopcionForm
-from django.urls import reverse_lazy
-from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Administrador, Mascota, SolicitudAdopcion
-
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from django.urls import reverse_lazy
+
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import Mascota, SolicitudAdopcion
+from .forms import SolicitudAdopcionForm
 
 def login_view(request):
     if request.method == 'POST':
@@ -71,6 +74,7 @@ class MascotaCreateView(CreateView):
 
 
 class MascotaUpdateView(UpdateView):
+    print("llega")
     model = Mascota
     fields = '__all__'
     template_name = 'mascota/mascota-update.html'
@@ -112,39 +116,60 @@ class SolicitudAdopcionCreateView(CreateView):
         return super().form_valid(form)
 
 
-
-# class SolicitudAdopcionUpdateView(UpdateView):
-#     model = SolicitudAdopcion
-#     template_name = 'solicitud/solicitud-update.html'
-#     fields = '__all__'
-    
 class SolicitudAdopcionUpdateView(UpdateView):
     model = SolicitudAdopcion
     template_name = 'solicitud/solicitudadopcion-update.html'
-    fields = ['estado_solicitud']  # Solo vamos a permitir la edición de este campo
+    fields = ['estado_solicitud']  # Permitimos editar solo este campo
 
     def get_success_url(self):
-        # Después de aceptar la solicitud, redirigir a la lista de solicitudes
+        # Después de actualizar, redirige a la lista de solicitudes
         return reverse_lazy('solicitudadopcion-list')
 
     def form_valid(self, form):
+        solicitud = form.instance
+
         # Comprobamos si el formulario fue enviado con la acción de "Aceptar" o "Rechazar"
         if 'aceptar' in self.request.POST:
-            form.instance.estado_solicitud = 'Aprobada'  
+            solicitud.estado_solicitud = 'Aprobada'
+
+            # Lógica para enviar el correo al solicitante
+            subject = "¡Felicidades, tu solicitud de adopción ha sido aceptada!"
+            message = f"""
+            Hola {solicitud.nombre_solicitante},
+
+            Nos complace informarte que tu solicitud para adoptar ha sido aceptada.
+            Por favor, acércate al establecimiento "Patitas Felices" en horario de oficina para completar la adopción.
+
+            Dirección: Calle Principal, Llorente, Nariño.
+
+            ¡Gracias por dar un hogar a una mascota necesitada!
+
+            Atentamente, 
+            El equipo de Patitas Felices.
+            """
+            recipient_email = solicitud.email_solicitante
+
+            try:
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [recipient_email],
+                )
+                messages.success(self.request, f"Correo enviado a {solicitud.nombre_solicitante}.")
+            except Exception as e:
+                messages.error(self.request, f"Error al enviar el correo: {e}")
+
         elif 'rechazar' in self.request.POST:
-            form.instance.estado_solicitud = 'Rechazada'  
+            solicitud.estado_solicitud = 'Rechazada'
+            messages.info(self.request, f"La solicitud de {solicitud.nombre_solicitante} fue rechazada.")
+
         return super().form_valid(form)
 
 class SolicitudAdopcionDeleteView(DeleteView):   
     model = SolicitudAdopcion
     template_name = 'solicitud/solicitudadopcion-delete.html'
     success_url = reverse_lazy('solicitudadopcion-list')  # Redirige después de eliminar
-
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import Mascota, SolicitudAdopcion
-from .forms import SolicitudAdopcionForm
 
 def solicitud_adopcion(request, mascota_id):
     mascota = get_object_or_404(Mascota, id=mascota_id)  # Obtiene la mascota seleccionada

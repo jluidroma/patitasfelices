@@ -2,27 +2,63 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="card shadow-lg border-primary">
-        <div class="card-header bg-primary text-white text-center">
-            <h3 class="mb-0">Actualizar Solicitud de Adopción</h3>
+    <div class="card shadow-lg border-0">
+        <!-- Encabezado de la tarjeta -->
+        <div class="card-header bg-gradient-primary text-white text-center py-4">
+            <h3 class="mb-1">Actualizar Solicitud de Adopción</h3>
             <p class="mb-0">Modifica el estado de la solicitud de adopción.</p>
         </div>
 
+        <!-- Cuerpo de la tarjeta -->
         <div class="card-body">
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
-
-                <!-- Botones para aceptar o rechazar la solicitud -->
-                <button type="submit" name="aceptar" class="btn btn-success btn-lg">
-                    <i class="fas fa-check-circle"></i> Aceptar Solicitud
-                </button>
-
-                <button type="submit" name="rechazar" class="btn btn-warning btn-lg">
-                    <i class="fas fa-times-circle"></i> Rechazar Solicitud
-                </button>
+                
+                <!-- Contenedor para los botones -->
+                <div class="d-flex justify-content-between mt-4">
+                    <!-- Botón de aceptar -->
+                    <button type="submit" name="aceptar" class="btn btn-success px-4 py-2 rounded-pill shadow-sm">
+                        <i class="fas fa-check-circle me-2"></i>Aceptar
+                    </button>
+                    
+                    <!-- Botón de rechazar -->
+                    <button type="submit" name="rechazar" class="btn btn-danger px-4 py-2 rounded-pill shadow-sm">
+                        <i class="fas fa-times-circle me-2"></i>Rechazar
+                    </button>
+                </div>
             </form>
         </div>
     </div>
 </div>
+
+<!-- Estilo personalizado -->
+<style>
+    .btn {
+        font-size: 1rem; /* Ajusta el tamaño del texto */
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px); /* Pequeño efecto al pasar el mouse */
+    }
+
+    .card {
+        border-radius: 15px; /* Esquinas redondeadas */
+        overflow: hidden; /* Evita bordes sobresalientes */
+    }
+
+    .card-header {
+        background: linear-gradient(90deg, #007bff, #0056b3); /* Gradiente */
+        font-weight: 600;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .container {
+        max-width: 600px; /* Reduce el ancho máximo */
+    }
+</style>
 {% endblock %}
